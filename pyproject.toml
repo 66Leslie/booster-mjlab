@@ -3,7 +3,7 @@ name = "mjlab-playground"
 version = "0.1.0"
 description = "Extra tasks for mjlab"
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.13,<3.14"
 dependencies = [
     "mjlab[cu128]",
     "torch>=2.7.0,<2.10.0",
@@ -14,13 +14,11 @@ requires = ["uv_build>=0.8.18,<0.9.0"]
 build-backend = "uv_build"
 
 [tool.uv.sources]
-mjlab = { git = "https://github.com/mujocolab/mjlab", rev = "f7fdb163b590e980865e59a5633ff5e1143553bd" }
+mjlab = { git = "https://github.com/mujocolab/mjlab", rev = "9298ba5691858dec9f0fa7c53c0ffb453192da67" }
 warp-lang = { index = "nvidia", marker = "sys_platform != 'darwin'" }
 torch = [
   { index = "pytorch-cu128", marker = "sys_platform != 'darwin'" },
 ]
-mujoco = { index = "mujoco" }
-mujoco-warp = { git = "https://github.com/google-deepmind/mujoco_warp", rev = "875c4caf06d71b12b2036c327e7a07ce08a78b9a" }
 
 [[tool.uv.index]]
 url = "https://pypi.org/simple"
@@ -35,15 +33,6 @@ name = "pytorch-cu128"
 url = "https://download.pytorch.org/whl/cu128"
 explicit = true
 
-[[tool.uv.index]]
-name = "mujoco"
-url = "https://py.mujoco.org"
-explicit = true
-
-# The nightly index (py.mujoco.org) only has dev builds.
-[tool.uv]
-override-dependencies = ["mujoco>=3.6.0.dev0"]
-
 [tool.ruff]
 indent-width = 2
 src = ["src/mjlab_playground"]
@@ -54,6 +43,8 @@ select = ["E4", "E7", "E9", "F", "I", "B"]
 
 [tool.pyright]
 pythonVersion = "3.13"
+include = ["src"]
+exclude = ["tests", "typings"]
 ignore = ["./typings"]
 stubPath = "typings"
 reportWildcardImportFromLibrary = false

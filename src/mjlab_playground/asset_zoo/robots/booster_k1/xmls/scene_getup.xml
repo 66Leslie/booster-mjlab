@@ -1,0 +1,28 @@
+<mujoco model="k1_getup">
+  <include file="k1/robot.xml" />
+
+  <option timestep="0.005" integrator="Euler" iterations="60" cone="elliptic" impratio="100">
+    <flag eulerdamp="disable" />
+  </option>
+
+  <asset>
+    <texture name="motphys-ground" type="2d" file="motphys-ground.png" />
+    <material name="motphys-ground" texture="motphys-ground" texuniform="true" texrepeat="0.4 0.4" />
+  </asset>
+
+  <worldbody>
+    <light directional="true" diffuse=".8 .8 .8" specular=".2 .2 .2" pos="0 0 4" dir="0 0 -1" />
+    <geom
+      name="floor"
+      type="plane"
+      pos="0 0 0"
+      size="0 0 0.02"
+      material="motphys-ground"
+      contype="1"
+      conaffinity="1"
+      priority="1"
+      condim="3"
+      friction="0.8 0.02 0.001"
+    />
+  </worldbody>
+</mujoco>

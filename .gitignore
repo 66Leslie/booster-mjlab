@@ -14,6 +14,11 @@ logs/
 wandb/
 *.pt
 *.onnx
+*.pkl
+*.pickle
+*.npz
+src/mjlab_playground/asset_zoo/motions/retargeted/*
+!src/mjlab_playground/asset_zoo/motions/retargeted/README.md
 
 scripts/
 

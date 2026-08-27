@@ -1,0 +1,19 @@
+mjlab_playground Booster locomotion extensions
+Copyright 2026 66Leslie and contributors
+
+This product includes software developed by the mjlab_playground contributors:
+https://github.com/mujocolab/mjlab_playground
+
+The Booster T1 velocity task contains adapted and modified work from
+KaydenKnapik/BoosterT1mjlab:
+https://github.com/KaydenKnapik/BoosterT1mjlab
+
+Booster K1 asset and configuration work references NishB17/MJLabModified:
+https://github.com/NishB17/MJLabModified
+
+Parts of the competition-compatible Booster K1 MJCF lineage reference
+RCSSServerMJ. Its MIT license is reproduced in
+third_party_licenses/RCSSServerMJ-MIT.txt.
+
+Motion datasets and locally generated retargeted files are not included in, and
+are not relicensed by, this distribution.

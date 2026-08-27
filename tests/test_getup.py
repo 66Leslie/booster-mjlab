@@ -8,8 +8,9 @@ import torch
 from mjlab.envs import ManagerBasedRlEnv
 from mjlab.managers.scene_entity_config import SceneEntityCfg
 from mjlab.scene import Scene
-from mjlab_playground.getup.config.go1.env_cfgs import unitree_go1_getup_env_cfg
-from mjlab_playground.getup.config.t1.env_cfgs import booster_t1_getup_env_cfg
+from mjlab_playground.tasks.getup.config.go1.env_cfgs import unitree_go1_getup_env_cfg
+from mjlab_playground.tasks.getup.config.k1.env_cfgs import booster_k1_getup_env_cfg
+from mjlab_playground.tasks.getup.config.t1.env_cfgs import booster_t1_getup_env_cfg
 
 _NUM_ENVS = 5
 
@@ -66,6 +67,14 @@ def go1_model() -> mujoco.MjModel:
 
 
 @pytest.fixture(scope="module")
+def k1_model() -> mujoco.MjModel:
+  cfg = booster_k1_getup_env_cfg()
+  cfg.scene.num_envs = 1
+  scene = Scene(cfg.scene, "cpu")
+  return scene.compile()
+
+
+@pytest.fixture(scope="module")
 def t1_env() -> ManagerBasedRlEnv:
   cfg = booster_t1_getup_env_cfg()
   cfg.scene.num_envs = _NUM_ENVS
@@ -80,6 +89,15 @@ def go1_env() -> ManagerBasedRlEnv:
   cfg.scene.num_envs = _NUM_ENVS
   env = ManagerBasedRlEnv(cfg, device="cpu")
   env.reset()
+  return env
+
+
+@pytest.fixture(scope="module")
+def k1_env() -> ManagerBasedRlEnv:
+  cfg = booster_k1_getup_env_cfg()
+  cfg.scene.num_envs = _NUM_ENVS
+  env = ManagerBasedRlEnv(cfg, device="cpu")
+  env.reset(seed=0)
   return env
 
 
@@ -98,6 +116,10 @@ def test_go1_collision_priority(go1_model: mujoco.MjModel) -> None:
   assert len(priorities) > 0, "No collision geoms found for Go1"
   for name, priority in priorities.items():
     assert priority == 1, f"Go1 geom {name!r} has priority={priority}, expected 1"
+
+
+def test_k1_actuator_count(k1_model: mujoco.MjModel) -> None:
+  assert k1_model.nu == 22
 
 
 # Friction domain randomization.
@@ -127,3 +149,21 @@ def test_go1_friction_dr(go1_env: ManagerBasedRlEnv) -> None:
   _assert_varied_across_worlds(
     foot_friction[:, :, 2], "Go1 foot roll friction (axis 2)"
   )
+
+
+def test_k1_getup_smoke_and_obs_shapes(k1_env: ManagerBasedRlEnv) -> None:
+  obs, _ = k1_env.reset(seed=0)
+
+  assert obs["actor"].shape[-1] == 72
+  assert obs["critic"].shape[-1] == 75
+  assert torch.isfinite(obs["actor"]).all()
+  assert torch.isfinite(obs["critic"]).all()
+  assert k1_env.action_manager.action.shape[-1] == 22
+
+  action = torch.zeros_like(k1_env.action_manager.action)
+  obs, reward, terminated, truncated, _ = k1_env.step(action)
+  assert torch.isfinite(obs["actor"]).all()
+  assert torch.isfinite(obs["critic"]).all()
+  assert torch.isfinite(reward).all()
+  assert terminated.shape[0] == _NUM_ENVS
+  assert truncated.shape[0] == _NUM_ENVS
