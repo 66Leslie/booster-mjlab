@@ -15,6 +15,16 @@ using the compatible `2026-04-15_10-04-41/model_10100.pt` checkpoint. The later
 `2026-04-27_10-05-04/model_13900.pt` run has a known low-response command region
 and is intentionally not used for this demo.
 
+### Target-location locomotion with AMP
+
+| Booster K1 | Booster T1 |
+|---|---|
+| ![Booster K1 target-location AMP](docs/media/k1_target_location_amp.gif) | ![Booster T1 target-location AMP](docs/media/t1_target_location_amp.gif) |
+
+Both GIFs are six-second excerpts from trained-policy recordings. The target
+marker and connecting line show the commanded destination while the policy
+continually adjusts the robot's position and heading.
+
 ## Repository layout
 
 ```text
