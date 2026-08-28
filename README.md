@@ -2,6 +2,19 @@
 
 This fork extends [mujocolab/mjlab_playground](https://github.com/mujocolab/mjlab_playground) with Booster T1/K1 locomotion tasks while keeping the upstream task-registration and configuration style.
 
+## Demo
+
+### Booster T1 velocity tracking
+
+![Booster T1 velocity tracking](docs/media/t1_velocity_tracking.gif)
+
+The dark-blue arrow is the commanded linear velocity and the cyan arrow is the
+measured linear velocity. Dark/light green show commanded/measured yaw motion.
+This five-second clip was recorded with MJLab's built-in `play --video` support
+using the compatible `2026-04-15_10-04-41/model_10100.pt` checkpoint. The later
+`2026-04-27_10-05-04/model_13900.pt` run has a known low-response command region
+and is intentionally not used for this demo.
+
 ## Repository layout
 
 ```text
@@ -31,15 +44,17 @@ Task-independent AMP code lives in `amp/`; target-location commands, rewards, te
 | `Mjlab-Getup-Flat-Unitree-Go1` | Unitree Go1 | Upstream flat-ground get-up |
 | `Mjlab-Getup-Flat-Booster-T1` | Booster T1 | Upstream flat-ground get-up |
 | `Mjlab-Getup-Flat-Booster-K1` | Booster K1 | Flat-ground get-up |
-| `Mjlab-Velocity-Rough-Booster-T1` | Booster T1 | Rough-terrain velocity tracking |
 | `Mjlab-Velocity-Flat-Booster-T1` | Booster T1 | Flat-ground velocity tracking |
-| `Mjlab-VelocityYaw-Flat-Booster-T1` | Booster T1 | Flat-ground yaw/velocity tracking |
-| `Mjlab-VelocityRaw-Flat-Booster-T1` | Booster T1 | Flat-ground raw-observation variant |
 | `Mjlab-Tracking-Flat-Booster-T1` | Booster T1 | Reference-motion tracking |
 | `Mjlab-TargetLocationAmp-Flat-Booster-K1` | Booster K1 | Target-location locomotion with AMP |
 | `Mjlab-TargetLocationAmp-Flat-Booster-T1` | Booster T1 | Target-location locomotion with AMP |
 
-There is currently no K1 tracking task in this fork. The two additional T1 target-location task IDs ending in `CompetitionFoot` and `CompetitionCollision` are deployment-oriented contact/collision variants.
+There is one public Booster velocity task: `Mjlab-Velocity-Flat-Booster-T1`.
+Rough-terrain, raw-observation, and yaw-only builders remain implementation
+details rather than separately advertised environments. There is currently no
+K1 tracking task in this fork. The two additional T1 target-location task IDs
+ending in `CompetitionFoot` and `CompetitionCollision` are deployment-oriented
+contact/collision variants.
 
 ## Getting started
 
@@ -60,6 +75,14 @@ Train and play a task:
 ```bash
 uv run train Mjlab-Velocity-Flat-Booster-T1 --env.scene.num-envs 4096
 uv run play Mjlab-Velocity-Flat-Booster-T1
+```
+
+Record a short clip from a local checkpoint:
+
+```bash
+uv run play Mjlab-Velocity-Flat-Booster-T1 \
+  --checkpoint-file /path/to/model_10100.pt \
+  --num-envs 1 --video True --video-length 250
 ```
 
 The tracking and AMP tasks require separately prepared motion data. See [Motion data](docs/motion_data.md) before running them.

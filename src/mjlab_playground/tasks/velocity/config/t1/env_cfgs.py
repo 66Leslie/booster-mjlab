@@ -217,10 +217,16 @@ def booster_t1_flat_env_cfg(play: bool = False) -> ManagerBasedRlEnvCfg:
   if play:
     twist_cmd = cfg.commands["twist"]
     assert isinstance(twist_cmd, UniformVelocityCommandCfg)
-    twist_cmd.ranges.lin_vel_x = (3.0, 3.0)
+    # Resample visibly different commands during short play/video sessions.
+    twist_cmd.resampling_time_range = (1.0, 1.5)
+    twist_cmd.rel_standing_envs = 0.0
+    twist_cmd.rel_lateral_envs = 0.0
+    twist_cmd.rel_heading_envs = 1.0
+    twist_cmd.rel_forward_envs = 0.0
+    twist_cmd.ranges.lin_vel_x = (2.0, 3.0)
     twist_cmd.ranges.lin_vel_y = (0.0, 0.0)
-    twist_cmd.ranges.ang_vel_z = (0.0, 0.0)
-    twist_cmd.ranges.heading = (-0.3, 0.3)
+    twist_cmd.ranges.ang_vel_z = (-0.7, 0.7)
+    twist_cmd.ranges.heading = (-0.5, 0.5)
 
   return cfg
 

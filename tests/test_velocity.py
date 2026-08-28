@@ -14,7 +14,22 @@ from mjlab_playground.tasks.velocity.mdp.rewards import _is_forward_command_acti
 def test_velocity_task_registration() -> None:
   import mjlab_playground  # noqa: F401
 
-  assert "Mjlab-Velocity-Flat-Booster-T1" in list_tasks()
+  tasks = list_tasks()
+  assert "Mjlab-Velocity-Flat-Booster-T1" in tasks
+  assert "Mjlab-Velocity-Rough-Booster-T1" not in tasks
+  assert "Mjlab-VelocityYaw-Flat-Booster-T1" not in tasks
+  assert "Mjlab-VelocityRaw-Flat-Booster-T1" not in tasks
+
+
+def test_t1_velocity_play_cfg_resamples_visible_commands() -> None:
+  cfg = booster_t1_flat_env_cfg(play=True)
+  twist = cfg.commands["twist"]
+  assert twist.resampling_time_range == (1.0, 1.5)
+  assert twist.rel_standing_envs == 0.0
+  assert twist.rel_lateral_envs == 0.0
+  assert twist.ranges.lin_vel_x == (2.0, 3.0)
+  assert twist.ranges.lin_vel_y == (0.0, 0.0)
+  assert twist.ranges.heading == (-0.5, 0.5)
 
 
 def test_t1_velocity_uses_mixed_stand_x_heading_and_lateral_commands() -> None:
