@@ -1,123 +1,119 @@
-# mjlab playground: Booster locomotion tasks
+# MJLab Playground: Booster Locomotion Tasks
 
-This fork extends [mujocolab/mjlab_playground](https://github.com/mujocolab/mjlab_playground) with Booster T1/K1 locomotion tasks while keeping the upstream task-registration and configuration style.
+This repository extends [MJLab Playground](https://github.com/mujocolab/mjlab_playground) with reinforcement-learning environments for Booster T1 and K1 humanoid robots. It includes velocity control, reference-motion tracking, target-location locomotion with adversarial motion priors (AMP), and get-up tasks.
 
-## Demo
+## Demos
 
-### Booster T1 velocity tracking
-
-![Booster T1 velocity tracking](docs/media/t1_velocity_tracking.gif)
-
-The dark-blue arrow is the commanded linear velocity and the cyan arrow is the
-measured linear velocity. Dark/light green show commanded/measured yaw motion.
-This five-second clip was recorded with MJLab's built-in `play --video` support
-using the compatible `2026-04-15_10-04-41/model_10100.pt` checkpoint. The later
-`2026-04-27_10-05-04/model_13900.pt` run has a known low-response command region
-and is intentionally not used for this demo.
+| T1 velocity control | T1 reference-motion tracking |
+|---|---|
+| ![Booster T1 velocity control](docs/media/t1_velocity_tracking.gif) | ![Booster T1 reference-motion tracking](docs/media/t1_motion_tracking.gif) |
 
 ### Target-location locomotion with AMP
 
 | Booster K1 | Booster T1 |
 |---|---|
-| ![Booster K1 target-location AMP](docs/media/k1_target_location_amp.gif) | ![Booster T1 target-location AMP](docs/media/t1_target_location_amp.gif) |
+| ![Booster K1 target-location locomotion](docs/media/k1_target_location_amp.gif) | ![Booster T1 target-location locomotion](docs/media/t1_target_location_amp.gif) |
 
-Both GIFs are six-second excerpts from trained-policy recordings. The target
-marker and connecting line show the commanded destination while the policy
-continually adjusts the robot's position and heading.
+## Environments
 
-## Repository layout
-
-```text
-src/mjlab_playground/
-├── amp/                         # Shared AMP algorithm, runner, observations, loaders
-├── asset_zoo/robots/            # Robot-specific MJCF and constants
-│   ├── booster_t1/
-│   └── booster_k1/
-└── tasks/                       # Environment/task implementations
-    ├── common/                  # Small helpers shared by task families
-    ├── getup/
-    │   └── config/{go1,k1,t1}/
-    ├── velocity/
-    │   └── config/t1/
-    ├── tracking/
-    │   └── config/t1/
-    └── target_location_amp/
-        └── config/{k1,t1}/
-```
-
-Task-independent AMP code lives in `amp/`; target-location commands, rewards, termination rules and robot-specific configuration stay in `tasks/target_location_amp/`. This avoids coupling the AMP implementation to a single task and leaves a clear place for future robots.
-
-## Tasks
-
-| Task ID | Robot | Description |
+| Environment ID | Robot | Task |
 |---|---|---|
-| `Mjlab-Getup-Flat-Unitree-Go1` | Unitree Go1 | Upstream flat-ground get-up |
-| `Mjlab-Getup-Flat-Booster-T1` | Booster T1 | Upstream flat-ground get-up |
-| `Mjlab-Getup-Flat-Booster-K1` | Booster K1 | Flat-ground get-up |
-| `Mjlab-Velocity-Flat-Booster-T1` | Booster T1 | Flat-ground velocity tracking |
-| `Mjlab-Tracking-Flat-Booster-T1` | Booster T1 | Reference-motion tracking |
-| `Mjlab-TargetLocationAmp-Flat-Booster-K1` | Booster K1 | Target-location locomotion with AMP |
-| `Mjlab-TargetLocationAmp-Flat-Booster-T1` | Booster T1 | Target-location locomotion with AMP |
+| `Mjlab-Getup-Flat-Unitree-Go1` | Unitree Go1 | Get up on flat ground |
+| `Mjlab-Getup-Flat-Booster-T1` | Booster T1 | Get up on flat ground |
+| `Mjlab-Getup-Flat-Booster-K1` | Booster K1 | Get up on flat ground |
+| `Mjlab-Velocity-Flat-Booster-T1` | Booster T1 | Track planar velocity commands |
+| `Mjlab-Tracking-Flat-Booster-T1` | Booster T1 | Track a reference motion |
+| `Mjlab-TargetLocationAmp-Flat-Booster-K1` | Booster K1 | Reach a target position using AMP |
+| `Mjlab-TargetLocationAmp-Flat-Booster-T1` | Booster T1 | Reach a target position using AMP |
 
-There is one public Booster velocity task: `Mjlab-Velocity-Flat-Booster-T1`.
-Rough-terrain, raw-observation, and yaw-only builders remain implementation
-details rather than separately advertised environments. There is currently no
-K1 tracking task in this fork. The two additional T1 target-location task IDs
-ending in `CompetitionFoot` and `CompetitionCollision` are deployment-oriented
-contact/collision variants.
+The T1 target-location task also provides `CompetitionFoot` and `CompetitionCollision` variants for deployment-specific contact and collision settings. Run `uv run list-envs` to list every registered environment.
 
-## Getting started
+## Installation
 
 ```bash
-git clone https://github.com/66Leslie/mjlab_playground.git
+git clone --branch feature/booster-locomotion-tasks \
+  https://github.com/66Leslie/mjlab_playground.git
 cd mjlab_playground
 uv sync
 ```
 
-List registered tasks:
+## Training and evaluation
+
+Train a policy:
 
 ```bash
-uv run list-envs
+uv run train Mjlab-Velocity-Flat-Booster-T1 \
+  --env.scene.num-envs 4096
 ```
 
-Train and play a task:
-
-```bash
-uv run train Mjlab-Velocity-Flat-Booster-T1 --env.scene.num-envs 4096
-uv run play Mjlab-Velocity-Flat-Booster-T1
-```
-
-Record a short clip from a local checkpoint:
+Run a trained policy:
 
 ```bash
 uv run play Mjlab-Velocity-Flat-Booster-T1 \
-  --checkpoint-file /path/to/model_10100.pt \
-  --num-envs 1 --video True --video-length 250
+  --checkpoint-file /path/to/model.pt \
+  --num-envs 1
 ```
 
-The tracking and AMP tasks require separately prepared motion data. See [Motion data](docs/motion_data.md) before running them.
+Record a rollout with MJLab's video recorder:
 
-## Motion-data policy
+```bash
+uv run play Mjlab-Velocity-Flat-Booster-T1 \
+  --checkpoint-file /path/to/model.pt \
+  --num-envs 1 \
+  --video True \
+  --video-length 250
+```
 
-Retargeted files are generated artifacts, but their redistribution rights still depend on the original motion dataset. Consequently, this repository does **not** include LAFAN1-, AMASS-, or BMLrub-derived `.npz`, `.pkl`, or `.pickle` files. Retarget them locally from data you are licensed to use, then point the task to the local output. The expected paths, environment variables and pickle schema are documented in [docs/motion_data.md](docs/motion_data.md).
+Replace the environment ID in these commands to train or evaluate another task.
 
-## Sources and attribution
+## Motion data
 
-- Base repository: [mujocolab/mjlab_playground](https://github.com/mujocolab/mjlab_playground), Apache-2.0.
-- The T1 velocity task is adapted from [KaydenKnapik/BoosterT1mjlab](https://github.com/KaydenKnapik/BoosterT1mjlab), Apache-2.0, and has been substantially modified for this repository layout and current MJLab APIs.
-- K1 MJLab asset/configuration work references [NishB17/MJLabModified](https://github.com/NishB17/MJLabModified), Apache-2.0. The competition-compatible K1 MJCF lineage also references [RCSSServerMJ](https://github.com/YiranWang2004/RCSSServerMJ), MIT.
-- The shared AMP implementation was reorganized for this fork. [ccrpRepo/AMP_mjlab](https://github.com/ccrpRepo/AMP_mjlab) was consulted for high-level directory organization only; no source code or motion files were copied from it because the repository does not currently publish a root license.
-- Motion retargeting is compatible with [YanjieZe/GMR](https://github.com/YanjieZe/GMR), MIT. GMR's software license does not replace the license of the source motion dataset.
+Reference tracking and AMP training require locally prepared motion data:
 
-See [NOTICE](NOTICE) and [THIRD_PARTY.md](THIRD_PARTY.md) for details.
+- `Mjlab-Tracking-Flat-Booster-T1` reads an MJLab `.motion.npz` file from `MJLAB_TRACKING_MOTION_FILE`.
+- The AMP environments load GMR-style `.pkl` or `.pickle` files from `MJLAB_PLAYGROUND_MOTION_ROOT`. The T1 locomotion directory can be overridden with `MJLAB_PLAYGROUND_T1_LOCOMOTION_MOTION_DIR`.
+
+```bash
+export MJLAB_TRACKING_MOTION_FILE=/absolute/path/to/reference.motion.npz
+export MJLAB_PLAYGROUND_MOTION_ROOT=/absolute/path/to/mjlab_motions
+```
+
+Retargeted motion files are not distributed because their redistribution terms depend on the source dataset. See [docs/motion_data.md](docs/motion_data.md) for the expected directory layout, file schemas, and data-provenance requirements.
+
+## Project structure
+
+```text
+src/mjlab_playground/
+├── amp/                         # Shared AMP components and runners
+├── asset_zoo/robots/            # Robot models and constants
+│   ├── booster_k1/
+│   └── booster_t1/
+└── tasks/
+    ├── common/                  # Utilities shared across task families
+    ├── getup/
+    ├── tracking/
+    ├── velocity/
+    └── target_location_amp/
+```
+
+The task-independent AMP implementation lives in `amp/`. Commands, rewards, termination conditions, and robot-specific configurations remain under their corresponding task packages.
 
 ## Checkpoints
 
-Checkpoint files are intentionally ignored by Git. Publish reviewed weights as versioned GitHub Release assets instead of committing them to repository history. Each released checkpoint should identify the task ID, repository commit, complete training configuration, motion-data provenance, training command, observation/action contract and weight license. See [docs/checkpoints.md](docs/checkpoints.md).
+Model weights are not stored in the Git repository. Reviewed checkpoints can be published as versioned GitHub Release assets together with their training configuration, source commit, motion-data provenance, runtime contract, license, and checksums. See [docs/checkpoints.md](docs/checkpoints.md) for the release checklist.
+
+## Acknowledgements
+
+- [mujocolab/mjlab_playground](https://github.com/mujocolab/mjlab_playground) provides the base framework and task organization.
+- The T1 velocity environment is adapted from [KaydenKnapik/BoosterT1mjlab](https://github.com/KaydenKnapik/BoosterT1mjlab).
+- K1 assets and configurations reference [NishB17/MJLabModified](https://github.com/NishB17/MJLabModified) and [RCSSServerMJ](https://github.com/YiranWang2004/RCSSServerMJ).
+- Motion retargeting is compatible with [YanjieZe/GMR](https://github.com/YanjieZe/GMR).
+
+See [NOTICE](NOTICE) and [THIRD_PARTY.md](THIRD_PARTY.md) for detailed source and license information.
 
 ## Citation
 
-If you use this repository in research, consider citing MJLab:
+If you use this repository in your research, please cite MJLab:
 
 ```bibtex
 @misc{zakka2026mjlablightweightframeworkgpuaccelerated,
@@ -133,4 +129,4 @@ If you use this repository in research, consider citing MJLab:
 
 ## License
 
-Code in this repository is released under the [Apache-2.0 License](LICENSE), except where a bundled third-party component is identified with its own license. Motion datasets and locally generated retargeted files are not covered by this repository's Apache-2.0 license.
+Repository code is licensed under [Apache License 2.0](LICENSE), except for components explicitly identified under another license. Motion datasets and locally generated retargeted files are not covered by this repository license.
