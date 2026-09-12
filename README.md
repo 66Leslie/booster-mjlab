@@ -6,13 +6,13 @@ This repository extends [MJLab Playground](https://github.com/mujocolab/mjlab_pl
 
 | T1 velocity control | T1 reference-motion tracking |
 |---|---|
-| ![Booster T1 velocity control](docs/media/t1_velocity_tracking.gif) | ![Booster T1 reference-motion tracking](docs/media/t1_motion_tracking.gif) |
+| <img src="docs/media/t1_velocity_tracking.gif" alt="Booster T1 velocity control" width="400" /> | <img src="docs/media/t1_motion_tracking.gif" alt="Booster T1 reference-motion tracking" width="400" /> |
 
 ### Target-location locomotion with AMP
 
 | Booster K1 | Booster T1 |
 |---|---|
-| ![Booster K1 target-location locomotion](docs/media/k1_target_location_amp.gif) | ![Booster T1 target-location locomotion](docs/media/t1_target_location_amp.gif) |
+| <img src="docs/media/k1_target_location_amp.gif" alt="Booster K1 target-location locomotion" width="400" /> | <img src="docs/media/t1_target_location_amp.gif" alt="Booster T1 target-location locomotion" width="400" /> |
 
 ## Environments
 
