@@ -1,6 +1,8 @@
-# MJLab Playground: Booster Locomotion Tasks
+# Booster MJLab — Humanoid Locomotion and Motion Tracking
 
-This repository extends [MJLab Playground](https://github.com/mujocolab/mjlab_playground) with reinforcement-learning environments for Booster T1 and K1 humanoid robots. It includes velocity control, reference-motion tracking, target-location locomotion with adversarial motion priors (AMP), and get-up tasks.
+Reinforcement learning environments for Booster T1 and K1 humanoids, featuring velocity control, reference-motion tracking, and target-location locomotion with adversarial motion priors (AMP).
+
+Developed and maintained by [66Leslie](https://github.com/66Leslie), Booster MJLab extends [MJLab Playground](https://github.com/mujocolab/mjlab_playground) with Booster locomotion tasks, shared AMP training components, and robot-specific configurations.
 
 ## Demos
 
@@ -13,6 +15,20 @@ This repository extends [MJLab Playground](https://github.com/mujocolab/mjlab_pl
 | Booster K1 | Booster T1 |
 |---|---|
 | <img src="docs/media/k1_target_location_amp.gif" alt="Booster K1 target-location locomotion" width="400" /> | <img src="docs/media/t1_target_location_amp.gif" alt="Booster T1 target-location locomotion" width="400" /> |
+
+## Added capabilities
+
+Building on MJLab Playground at [`b036472`](https://github.com/mujocolab/mjlab_playground/commit/b036472), this project adds:
+
+| Capability | Implementation |
+|---|---|
+| **Target-location locomotion with AMP** | K1 and T1 environments with target commands, task rewards, termination conditions, and robot-specific training configurations. |
+| **T1 reference-motion tracking** | A tracking environment with reference-motion commands and configurable local motion data. |
+| **T1 velocity control** | A velocity environment adapted from [BoosterT1mjlab](https://github.com/KaydenKnapik/BoosterT1mjlab) and integrated with this project's task configuration and training interfaces. |
+| **K1 robot support** | Robot assets and configurations, a get-up environment, and target-location AMP support. |
+| **Shared AMP components** | AMP algorithm and runner code, observations, and motion loaders in a task-independent `amp/` package. |
+
+The project retains the upstream Go1 and T1 get-up tasks. Task families are organized under `tasks/`, with tests for get-up, velocity, tracking, and T1 target-location AMP. See [THIRD_PARTY.md](THIRD_PARTY.md) for the origins of adapted code and assets.
 
 ## Environments
 
@@ -31,9 +47,8 @@ The T1 target-location task also provides `CompetitionFoot` and `CompetitionColl
 ## Installation
 
 ```bash
-git clone --branch feature/booster-locomotion-tasks \
-  https://github.com/66Leslie/mjlab_playground.git
-cd mjlab_playground
+git clone https://github.com/66Leslie/booster-mjlab.git
+cd booster-mjlab
 uv sync
 ```
 
@@ -96,7 +111,7 @@ src/mjlab_playground/
     └── target_location_amp/
 ```
 
-The task-independent AMP implementation lives in `amp/`. Commands, rewards, termination conditions, and robot-specific configurations remain under their corresponding task packages.
+The task-independent AMP implementation lives in `amp/`. Commands, rewards, termination conditions, and robot-specific configurations remain under their corresponding task packages. The Python package remains `mjlab_playground` for compatibility with existing imports and MJLab task discovery.
 
 ## Checkpoints
 

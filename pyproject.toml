@@ -1,7 +1,7 @@
 [project]
 name = "mjlab-playground"
 version = "0.1.0"
-description = "Extra tasks for mjlab"
+description = "Booster T1 and K1 locomotion, motion tracking, and AMP tasks for MJLab"
 readme = "README.md"
 requires-python = ">=3.13,<3.14"
 dependencies = [
