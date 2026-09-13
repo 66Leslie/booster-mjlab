@@ -1,34 +1,59 @@
-# Booster MJLab — Humanoid Locomotion and Motion Tracking
+# Booster MJLab — Humanoid Locomotion & Motion Tracking
 
-Reinforcement learning environments for Booster T1 and K1 humanoids, featuring velocity control, reference-motion tracking, and target-location locomotion with adversarial motion priors (AMP).
+[![License: Apache 2.0](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
+[![Python 3.13](https://img.shields.io/badge/python-3.13-3776AB.svg?logo=python&logoColor=white)](pyproject.toml)
+[![CUDA 12.8](https://img.shields.io/badge/CUDA-12.8-76B900.svg?logo=nvidia&logoColor=white)](pyproject.toml)
+[![tests](https://github.com/66Leslie/booster-mjlab/actions/workflows/ci.yml/badge.svg?branch=feature/booster-locomotion-tasks)](https://github.com/66Leslie/booster-mjlab/actions/workflows/ci.yml)
+[![fork of mjlab_playground](https://img.shields.io/badge/fork-mjlab__playground-lightgrey.svg)](https://github.com/mujocolab/mjlab_playground)
 
-Developed and maintained by [66Leslie](https://github.com/66Leslie), Booster MJLab extends [MJLab Playground](https://github.com/mujocolab/mjlab_playground) with Booster locomotion tasks, shared AMP training components, and robot-specific configurations.
+Reinforcement learning environments for **Booster T1** and **Booster K1** humanoids, covering velocity control, reference-motion tracking, and target-location locomotion with adversarial motion priors (AMP).
+
+Forked from [mujocolab/mjlab_playground](https://github.com/mujocolab/mjlab_playground) at [`b036472`](https://github.com/mujocolab/mjlab_playground/commit/b036472) — see [What's new](#whats-new-over-mjlab-playground) for the full delta.
+
+## Contents
+
+- [Demos](#demos)
+- [What's new over MJLab Playground](#whats-new-over-mjlab-playground)
+- [Environments](#environments)
+- [Installation](#installation)
+- [Training and evaluation](#training-and-evaluation)
+- [Motion data](#motion-data)
+- [Project structure](#project-structure)
+- [Documentation](#documentation)
+- [Checkpoints](#checkpoints)
+- [Acknowledgements](#acknowledgements)
+- [Citation](#citation)
+- [License](#license)
 
 ## Demos
 
-| T1 velocity control | T1 reference-motion tracking |
-|---|---|
-| <img src="docs/media/t1_velocity_tracking.gif" alt="Booster T1 velocity control" width="200" /> | <img src="docs/media/t1_motion_tracking.gif" alt="Booster T1 reference-motion tracking" width="200" /> |
+**Booster T1 · Velocity control** — track planar velocity commands on flat ground.
 
-### Target-location locomotion with AMP
+<img src="docs/media/t1_velocity_tracking.gif" alt="Booster T1 velocity control" width="400">
 
-| Booster K1 | Booster T1 |
-|---|---|
-| <img src="docs/media/k1_target_location_amp.gif" alt="Booster K1 target-location locomotion" width="200" /> | <img src="docs/media/t1_target_location_amp.gif" alt="Booster T1 target-location locomotion" width="200" /> |
+**Booster T1 · Reference-motion tracking** — follow a reference motion.
 
-## Added capabilities
+<img src="docs/media/t1_motion_tracking.gif" alt="Booster T1 reference-motion tracking" width="400">
 
-Building on MJLab Playground at [`b036472`](https://github.com/mujocolab/mjlab_playground/commit/b036472), this project adds:
+**Booster K1 · Target-location locomotion with AMP** — reach a commanded target position.
+
+<img src="docs/media/k1_target_location_amp.gif" alt="Booster K1 target-location locomotion" width="400">
+
+**Booster T1 · Target-location locomotion with AMP** — the same task family on the T1.
+
+<img src="docs/media/t1_target_location_amp.gif" alt="Booster T1 target-location locomotion" width="400">
+
+## What's new over MJLab Playground
 
 | Capability | Implementation |
 |---|---|
 | **Target-location locomotion with AMP** | K1 and T1 environments with target commands, task rewards, termination conditions, and robot-specific training configurations. |
 | **T1 reference-motion tracking** | A tracking environment with reference-motion commands and configurable local motion data. |
-| **T1 velocity control** | A velocity environment adapted from [BoosterT1mjlab](https://github.com/KaydenKnapik/BoosterT1mjlab) and integrated with this project's task configuration and training interfaces. |
+| **T1 velocity control** | A velocity environment adapted from [BoosterT1mjlab](https://github.com/KaydenKnapik/BoosterT1mjlab), integrated with this project's task configuration and training interfaces. |
 | **K1 robot support** | Robot assets and configurations, a get-up environment, and target-location AMP support. |
 | **Shared AMP components** | AMP algorithm and runner code, observations, and motion loaders in a task-independent `amp/` package. |
 
-The project retains the upstream Go1 and T1 get-up tasks. Task families are organized under `tasks/`, with tests for get-up, velocity, tracking, and T1 target-location AMP. See [THIRD_PARTY.md](THIRD_PARTY.md) for the origins of adapted code and assets.
+The upstream Go1 and T1 get-up tasks are retained. Task families are organized under `tasks/`, with tests for get-up, velocity, tracking, and T1 target-location AMP. See [THIRD_PARTY.md](THIRD_PARTY.md) for the origins of adapted code and assets.
 
 ## Environments
 
@@ -45,6 +70,14 @@ The project retains the upstream Go1 and T1 get-up tasks. Task families are orga
 The T1 target-location task also provides `CompetitionFoot` and `CompetitionCollision` variants for deployment-specific contact and collision settings. Run `uv run list-envs` to list every registered environment.
 
 ## Installation
+
+**Prerequisites**
+
+| Requirement | Notes |
+|---|---|
+| Python | `>=3.13,<3.14` (pinned by `.python-version`) |
+| [uv](https://docs.astral.sh/uv/) | `>=0.8.18,<0.9.0`; all commands below run through it |
+| NVIDIA GPU + CUDA 12.8 | Required for training. On non-macOS platforms the dependency set pulls `mjlab[cu128]` and CUDA 12.8 PyTorch wheels. The test suite also runs on macOS. |
 
 ```bash
 git clone https://github.com/66Leslie/booster-mjlab.git
@@ -81,6 +114,16 @@ uv run play Mjlab-Velocity-Flat-Booster-T1 \
 
 Replace the environment ID in these commands to train or evaluate another task.
 
+Common development tasks are also exposed through the `Makefile`:
+
+```bash
+make sync     # uv sync
+make format   # ruff format + ruff check --fix
+make type     # pyright
+make test     # pytest tests/ -v
+make check    # format + type
+```
+
 ## Motion data
 
 Reference tracking and AMP training require locally prepared motion data:
@@ -113,9 +156,20 @@ src/mjlab_playground/
 
 The task-independent AMP implementation lives in `amp/`. Commands, rewards, termination conditions, and robot-specific configurations remain under their corresponding task packages. The Python package remains `mjlab_playground` for compatibility with existing imports and MJLab task discovery.
 
+## Documentation
+
+| Document | Contents |
+|---|---|
+| [docs/motion_data.md](docs/motion_data.md) | Motion data directory layout, file schemas, and provenance requirements |
+| [docs/checkpoints.md](docs/checkpoints.md) | Checkpoint release checklist and required metadata |
+| [THIRD_PARTY.md](THIRD_PARTY.md) | Origins of adapted code and assets |
+| [NOTICE](NOTICE) | Attribution notices |
+
 ## Checkpoints
 
-Model weights are not stored in the Git repository. Reviewed checkpoints can be published as versioned GitHub Release assets together with their training configuration, source commit, motion-data provenance, runtime contract, license, and checksums. See [docs/checkpoints.md](docs/checkpoints.md) for the release checklist.
+**No model weights are published with this repository.** Weights are not tracked in Git and no release assets exist yet.
+
+Reviewed checkpoints can be published as versioned GitHub Release assets together with their training configuration, source commit, motion-data provenance, runtime contract, license, and checksums. See [docs/checkpoints.md](docs/checkpoints.md) for the release checklist.
 
 ## Acknowledgements
 
