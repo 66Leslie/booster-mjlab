@@ -8,13 +8,13 @@ Developed and maintained by [66Leslie](https://github.com/66Leslie), Booster MJL
 
 | T1 velocity control | T1 reference-motion tracking |
 |---|---|
-| <img src="docs/media/t1_velocity_tracking.gif" alt="Booster T1 velocity control" width="400" /> | <img src="docs/media/t1_motion_tracking.gif" alt="Booster T1 reference-motion tracking" width="400" /> |
+| <img src="docs/media/t1_velocity_tracking.gif" alt="Booster T1 velocity control" width="200" /> | <img src="docs/media/t1_motion_tracking.gif" alt="Booster T1 reference-motion tracking" width="200" /> |
 
 ### Target-location locomotion with AMP
 
 | Booster K1 | Booster T1 |
 |---|---|
-| <img src="docs/media/k1_target_location_amp.gif" alt="Booster K1 target-location locomotion" width="400" /> | <img src="docs/media/t1_target_location_amp.gif" alt="Booster T1 target-location locomotion" width="400" /> |
+| <img src="docs/media/k1_target_location_amp.gif" alt="Booster K1 target-location locomotion" width="200" /> | <img src="docs/media/t1_target_location_amp.gif" alt="Booster T1 target-location locomotion" width="200" /> |
 
 ## Added capabilities
 
