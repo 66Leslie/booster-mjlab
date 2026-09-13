@@ -2,14 +2,12 @@ name: tests
 
 on:
   push:
-    branches: [main]
     paths-ignore:
       - '**.md'
       - '**.rst'
       - 'Makefile'
       - 'LICENSE'
   pull_request:
-    branches: [main]
     paths-ignore:
       - '**.md'
       - '**.rst'
