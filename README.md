@@ -1,3 +1,5 @@
+[中文](README.zh.md) | **English**
+
 # Booster MJLab — Humanoid Locomotion & Motion Tracking
 
 [![License: Apache 2.0](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
