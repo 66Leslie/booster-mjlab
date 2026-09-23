@@ -5,7 +5,7 @@
 [![License: Apache 2.0](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 [![Python 3.13](https://img.shields.io/badge/python-3.13-3776AB.svg?logo=python&logoColor=white)](pyproject.toml)
 [![CUDA 12.8](https://img.shields.io/badge/CUDA-12.8-76B900.svg?logo=nvidia&logoColor=white)](pyproject.toml)
-[![tests](https://github.com/66Leslie/booster-mjlab/actions/workflows/ci.yml/badge.svg?branch=feature/booster-locomotion-tasks)](https://github.com/66Leslie/booster-mjlab/actions/workflows/ci.yml)
+[![tests](https://github.com/66Leslie/booster-mjlab/actions/workflows/ci.yml/badge.svg)](https://github.com/66Leslie/booster-mjlab/actions/workflows/ci.yml)
 [![built on mjlab_playground](https://img.shields.io/badge/built_on-mjlab__playground-lightgrey.svg)](https://github.com/mujocolab/mjlab_playground)
 
 面向 **Booster T1** 与 **Booster K1** 人形机器人的强化学习环境，覆盖速度控制、参考动作跟踪，以及基于对抗式运动先验（AMP）的目标点运动。
