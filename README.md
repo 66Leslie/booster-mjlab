@@ -4,11 +4,11 @@
 [![Python 3.13](https://img.shields.io/badge/python-3.13-3776AB.svg?logo=python&logoColor=white)](pyproject.toml)
 [![CUDA 12.8](https://img.shields.io/badge/CUDA-12.8-76B900.svg?logo=nvidia&logoColor=white)](pyproject.toml)
 [![tests](https://github.com/66Leslie/booster-mjlab/actions/workflows/ci.yml/badge.svg?branch=feature/booster-locomotion-tasks)](https://github.com/66Leslie/booster-mjlab/actions/workflows/ci.yml)
-[![fork of mjlab_playground](https://img.shields.io/badge/fork-mjlab__playground-lightgrey.svg)](https://github.com/mujocolab/mjlab_playground)
+[![built on mjlab_playground](https://img.shields.io/badge/built_on-mjlab__playground-lightgrey.svg)](https://github.com/mujocolab/mjlab_playground)
 
 Reinforcement learning environments for **Booster T1** and **Booster K1** humanoids, covering velocity control, reference-motion tracking, and target-location locomotion with adversarial motion priors (AMP).
 
-Forked from [mujocolab/mjlab_playground](https://github.com/mujocolab/mjlab_playground) at [`b036472`](https://github.com/mujocolab/mjlab_playground/commit/b036472) — see [What's new](#whats-new-over-mjlab-playground) for the full delta.
+Based on [mujocolab/mjlab_playground](https://github.com/mujocolab/mjlab_playground) at [`b036472`](https://github.com/mujocolab/mjlab_playground/commit/b036472) — see [What's new](#whats-new-over-mjlab-playground) for the full delta.
 
 ## Contents
 
