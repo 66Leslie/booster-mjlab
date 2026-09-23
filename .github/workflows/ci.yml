@@ -17,7 +17,9 @@ on:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  # Never cancel a run on the default branch: a cancelled run leaves a red mark on the commit,
+  # which is misleading for a commit whose checks actually passed.
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 env:
   UV_FROZEN: "1"
